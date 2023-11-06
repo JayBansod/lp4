@@ -1,0 +1,72 @@
+//Write a program to implement Huffman Encoding using a greedy strategy.
+
+package com.company;
+
+import java.util.*;
+
+class HuffmanNode implements Comparable<HuffmanNode> {
+    char data;
+    int frequency;
+    HuffmanNode left;
+    HuffmanNode right;
+
+    public HuffmanNode(char data, int frequency) {
+        this.data = data;
+        this.frequency = frequency;
+    }
+
+    @Override
+    public int compareTo(HuffmanNode other) {
+        return this.frequency - other.frequency;
+    }
+}
+
+public class HuffmanEncoding {
+    public static Map<Character, String> buildHuffmanCodes(String input) {
+        Map<Character, Integer> frequencies = new HashMap<>();
+        for (char c : input.toCharArray()) {
+            frequencies.put(c, frequencies.getOrDefault(c, 0) + 1);
+        }
+
+        PriorityQueue<HuffmanNode> queue = new PriorityQueue<>();
+        for (Map.Entry<Character, Integer> entry : frequencies.entrySet()) {
+            queue.add(new HuffmanNode(entry.getKey(), entry.getValue()));
+        }
+
+        while (queue.size() > 1) {
+            HuffmanNode left = queue.poll();
+            HuffmanNode right = queue.poll();
+            HuffmanNode merged = new HuffmanNode('\0', left.frequency + right.frequency);
+            merged.left = left;
+            merged.right = right;
+            queue.add(merged);
+        }
+
+        HuffmanNode root = queue.poll();
+        Map<Character, String> huffmanCodes = new HashMap<>();
+        buildHuffmanCode(root, "", huffmanCodes);
+
+        return huffmanCodes;
+    }
+
+    public static void buildHuffmanCode(HuffmanNode node, String code, Map<Character, String> huffmanCodes) {
+        if (node == null) {
+            return;
+        }
+        if (node.data != '\0') {
+            huffmanCodes.put(node.data, code);
+        }
+        buildHuffmanCode(node.left, code + "0", huffmanCodes);
+        buildHuffmanCode(node.right, code + "1", huffmanCodes);
+    }
+
+    public static void main(String[] args) {
+        String input = "hello, world!";
+        Map<Character, String> huffmanCodes = buildHuffmanCodes(input);
+
+        System.out.println("Huffman Codes:");
+        for (Map.Entry<Character, String> entry : huffmanCodes.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+    }
+}

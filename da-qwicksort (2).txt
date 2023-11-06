@@ -1,0 +1,89 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class QuickSort {
+    public static void deterministicQuickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pivotIndex = deterministicPartition(arr, low, high);
+            deterministicQuickSort(arr, low, pivotIndex - 1);
+            deterministicQuickSort(arr, pivotIndex + 1, high);
+        }
+    }
+
+    public static int deterministicPartition(int[] arr, int low, int high) {
+        int pivot = arr[low];
+        int left = low + 1;
+        int right = high;
+
+        while (true) {
+            while (left <= right && arr[left] <= pivot) {
+                left++;
+            }
+            while (arr[right] >= pivot && right >= left) {
+                right--;
+            }
+            if (right < left) {
+                break;
+            } else {
+                int temp = arr[left];
+                arr[left] = arr[right];
+                arr[right] = temp;
+            }
+        }
+
+        int temp = arr[low];
+        arr[low] = arr[right];
+        arr[right] = temp;
+
+        return right;
+    }
+
+    public static void randomizedQuickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pivotIndex = randomizedPartition(arr, low, high);
+            randomizedQuickSort(arr, low, pivotIndex - 1);
+            randomizedQuickSort(arr, pivotIndex + 1, high);
+        }
+    }
+
+    public static int randomizedPartition(int[] arr, int low, int high) {
+        int pivotIndex = new Random().nextInt(high - low + 1) + low;
+        int temp = arr[pivotIndex];
+        arr[pivotIndex] = arr[high];
+        arr[high] = temp;
+        return deterministicPartition(arr, low, high);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of elements: ");
+        int n = scanner.nextInt();
+        int[] arr = new int[n];
+
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.println("Choose the sorting variant:");
+        System.out.println("1. Deterministic Quick Sort");
+        System.out.println("2. Randomized Quick Sort");
+        int choice = scanner.nextInt();
+
+        if (choice == 1) {
+            deterministicQuickSort(arr, 0, n - 1);
+        } else if (choice == 2) {
+            randomizedQuickSort(arr, 0, n - 1);
+        } else {
+            System.out.println("Invalid choice");
+            return;
+        }
+
+        System.out.println("Sorted array:");
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+
+        scanner.close();
+    }
+}

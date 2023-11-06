@@ -1,0 +1,41 @@
+// Write a program non-recursive and recursive program to calculate Fibonacci numbers andanalyze their time and space complexity.
+
+package com.company;
+import java.util.Scanner;
+public class fibonacci {
+    static int rec_fib(int n)
+    {
+        if (n <= 1)
+            return n;
+        return rec_fib(n - 1) + rec_fib(n-2);
+    }
+    static void nonRec_fib(int n){
+        int num1=0,num2=1,num3;
+        for(int i=0;i<n;i++){
+            System.out.print(num1+" ");
+            num3=num1+num2;
+            num1=num2;
+            num2=num3;
+        }
+    }
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Enter the number");
+        int num=sc.nextInt();
+        // recursive
+        System.out.println("recursive");
+        long t1=System.currentTimeMillis();
+        for (int i = 0; i < num; i++) {
+            System.out.print(rec_fib(i)+" ");
+        }
+        long t2=System.currentTimeMillis();
+        System.out.println("\nTime required for recursive "+(t2-t1));
+
+        System.out.println("\nNon recursive");
+        t1=System.currentTimeMillis();
+        nonRec_fib(num);
+        t2=System.currentTimeMillis();
+        System.out.println("\nTime required for non-recursive "+(t2-t1));
+
+    }
+}
